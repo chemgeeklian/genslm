@@ -6,8 +6,9 @@ from pathlib import Path
 from typing import Any, Dict, Optional, Type, TypeVar, Union
 
 import yaml
-from pydantic import BaseSettings as _BaseSettings
-from pydantic import root_validator, validator
+from pydantic_settings import BaseSettings as _BaseSettings
+from pydantic import model_validator, validator
+#from pydantic import BaseSettings, model_validator
 
 import genslm
 
@@ -219,7 +220,7 @@ class ModelSettings(BaseSettings):
         # Example: v = Path("$PSCRATCH") => str(v)[1:] == "PSCRATCH"
         return None if v is None else Path(os.environ.get(str(v)[1:], v))
 
-    @root_validator
+    @model_validator(mode="after")
     def warn_checkpoint_load(cls, values: Dict[str, Any]) -> Dict[str, Any]:
         load_pt_checkpoint = values.get("load_pt_checkpoint")
         load_ds_checkpoint = values.get("load_ds_checkpoint")
@@ -230,7 +231,7 @@ class ModelSettings(BaseSettings):
             )
         return values
 
-    @root_validator
+    @model_validator(mode="after")
     def warn_checkpoint_steps(cls, values: Dict[str, Any]) -> Dict[str, Any]:
         checkpoint_every_n_train_steps = values.get("checkpoint_every_n_train_steps")
         checkpoint_every_n_epochs = values.get("checkpoint_every_n_epochs")
