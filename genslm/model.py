@@ -15,7 +15,7 @@ from lightning_transformers.utilities.deepspeed import (
 )
 from pytorch_lightning.callbacks import Callback, LearningRateMonitor, ModelCheckpoint
 from pytorch_lightning.loggers import WandbLogger
-from pytorch_lightning.profiler import PyTorchProfiler
+from pytorch_lightning.profilers import PyTorchProfiler
 from pytorch_lightning.strategies import DeepSpeedStrategy
 from tokenizers import Tokenizer
 from torch.optim.lr_scheduler import ReduceLROnPlateau

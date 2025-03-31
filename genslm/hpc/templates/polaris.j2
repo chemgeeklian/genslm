@@ -45,7 +45,11 @@ echo < $PBS_NODEFILE
 cd {{ workdir }}
 
 # Initialize environment
-module load conda/2022-09-08
+# module load conda/2022-09-08
+
+module use /soft/modulefiles
+module load conda spack-pe-base/0.8.1 tmux/3.4
+
 conda activate genslm
 # IMPORTANT NOTE: This requires having a conda environment called genslm
 

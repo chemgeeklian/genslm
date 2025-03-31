@@ -30,8 +30,8 @@ def process_dataset(
         raise ValueError("Fasta dir not present")
     if not tokenizer_file:
         raise ValueError("Tokenizer file not present")
-    if not h5_dir:
-        raise ValueError("Output dir not present")
+    #if not h5_dir:
+    #    raise ValueError("Output dir not present")
 
     h5_dir.mkdir(exist_ok=True)
     tokenizer = PreTrainedTokenizerFast(
@@ -40,16 +40,17 @@ def process_dataset(
     tokenizer.add_special_tokens({"pad_token": "[PAD]"})
     files = list(fasta_dir.glob(glob_pattern))
     out_files = [h5_dir / f"{f.stem}.h5" for f in files]
-    already_done = set(f.name for f in h5_dir.glob("**/*.h5"))
 
-    if len(already_done) == len(files):
-        raise ValueError(f"Already processed all files in {fasta_dir}")
+    #already_done = set(f.name for f in h5_dir.glob("**/*.h5"))
+
+    #if len(already_done) == len(files):
+    #    raise ValueError(f"Already processed all files in {fasta_dir}")
 
     files, out_files = zip(
         *[
             (fin, fout)
             for fin, fout in zip(files, out_files)
-            if fout.name not in already_done
+            #if fout.name not in already_done
         ]
     )
 
