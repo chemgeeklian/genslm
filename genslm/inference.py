@@ -110,5 +110,8 @@ class GenSLM(nn.Module):
         self, input_ids: torch.Tensor, attention_mask: torch.Tensor, **kwargs: Any
     ) -> ModelOutput:
         return self.model(
-            input_ids, labels=input_ids, attention_mask=attention_mask, **kwargs
+            input_ids, 
+            labels=input_ids, 
+            attention_mask=attention_mask, 
+            **kwargs
         )

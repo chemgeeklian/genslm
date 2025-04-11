@@ -11,7 +11,7 @@ compute_throughput: false
 profiling_path: null
 enable_perplexity: true
 log_every_n_steps: 5
-check_val_every_n_steps: null
+#check_val_every_n_steps: null
 limit_val_batches: 32
 check_val_every_n_epoch: 1
 checkpoint_every_n_train_steps: 500
