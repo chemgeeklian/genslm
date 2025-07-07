@@ -73,13 +73,13 @@ class DNATransformer(pl.LightningModule):
         #     )
         # # needed to load from checkpoint
         if generation_flag and self.global_rank == 0:
-            try:
-                enable_transformers_pretrained_deepspeed_sharding(self)
-            except AttributeError:
-                pl.utilities.rank_zero.rank_zero_warn(
-                    "Transformers sharding initialization not enabled -  likely not using DeepSpeed..."
-                )
-            self.model = AutoModelForCausalLM.from_config(self.base_config)
+        #    try:
+        #        enable_transformers_pretrained_deepspeed_sharding(self)
+        #    except AttributeError:
+        #        pl.utilities.rank_zero.rank_zero_warn(
+        #            "Transformers sharding initialization not enabled -  likely not using DeepSpeed..."
+        #        )
+            self.model = None #AutoModelForCausalLM.from_config(self.base_config)
         # should not be loading from checkpoints for Selene runs
         # try:
         #     enable_transformers_pretrained_deepspeed_sharding(self)
@@ -97,7 +97,7 @@ class DNATransformer(pl.LightningModule):
     # def configure_sharded_model(self):
     #     self.model = AutoModelForCausalLM.from_config(self.base_config)
     def setup(self, stage):
-        if not hasattr(self, "model"):
+        if not hasattr(self, "model") or self.model is None:
             try:
                 enable_transformers_pretrained_deepspeed_sharding(self)
             except AttributeError:
@@ -105,6 +105,7 @@ class DNATransformer(pl.LightningModule):
                     "Transformers sharding initialization not enabled -  likely not using DeepSpeed..."
                 )
             self.model = AutoModelForCausalLM.from_config(self.base_config)
+
         if self.cfg.deepspeed_flops_profile:
             self.flops_profiler = FlopsProfiler(self.model)
 
