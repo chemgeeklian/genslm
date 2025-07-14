@@ -105,7 +105,8 @@ class GenSLM(nn.Module):
         )
         tokenizer.add_special_tokens({"pad_token": "[PAD]"})
         return tokenizer
-
+    
+    '''
     def forward(
         self, input_ids: torch.Tensor, attention_mask: torch.Tensor, **kwargs: Any
     ) -> ModelOutput:
@@ -113,5 +114,21 @@ class GenSLM(nn.Module):
             input_ids, 
             labels=input_ids, 
             attention_mask=attention_mask, 
+            **kwargs
+        )
+    '''
+
+    def forward(
+    self,
+    input_ids: torch.Tensor,
+    attention_mask: torch.Tensor,
+    labels: torch.Tensor = None, 
+    **kwargs: Any
+    ) -> ModelOutput:
+        
+        return self.model(
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            labels=labels,
             **kwargs
         )
