@@ -555,7 +555,7 @@ class FileBackedH5Dataset(Dataset, H5PreprocessMixin):
         return self.read_from_h5(idx)
 
 
-class SequenceDataset(Dataset):  # type: ignore[type-arg]
+class _SequenceDataset(Dataset):  # type: ignore[type-arg]
     """Dataset initialized from a list of sequence strings."""
 
     def __init__(
@@ -609,3 +609,43 @@ class SequenceDataset(Dataset):  # type: ignore[type-arg]
             "attention_mask": batch_encoding["attention_mask"],
         }
         return sample
+
+class SequenceDataset(Dataset):
+    def __init__(self, sequences, tokenizer, seq_length, kmer_size=3, verbose=True):
+        self.sequences = sequences
+        self.tokenizer = tokenizer
+        self.seq_length = seq_length
+        self.kmer_size = kmer_size
+        self.verbose = verbose
+
+        for i in sequences:
+            if len(i) % kmer_size != 0:
+                raise ValueError(f"❌ seq_length ({seq_length}) must be divisible by kmer_size ({kmer_size}）")
+
+    def __len__(self):
+        return len(self.sequences)
+
+    def __getitem__(self, idx):
+        seq = self.sequences[idx]
+        kmer_seq = " ".join(seq[i:i + self.kmer_size] for i in range(0, len(seq), self.kmer_size))
+        encoded = self.tokenizer(
+            kmer_seq,
+            max_length=self.seq_length,
+            truncation=True,
+            padding="max_length",
+            return_tensors="pt"
+        )
+        input_ids = encoded["input_ids"].squeeze(0)
+        attention_mask = encoded["attention_mask"].squeeze(0)
+
+        labels = input_ids.clone()
+        labels[input_ids == self.tokenizer.pad_token_id] = -100
+
+        return {
+            "input_ids": input_ids,
+            "attention_mask": attention_mask,
+            "labels": labels
+        }
+
+    def __repr__(self):
+        return f"SequenceDataset(num_seqs={len(self)}, kmer={self.kmer_size}, max_len={self.seq_length})"
