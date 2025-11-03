@@ -1,0 +1,24 @@
+train_path: /home/xlian/genslm/examples/training/finetune_fasta/data/train_1000.fasta
+eval_path: /home/xlian/genslm/examples/training/finetune_fasta/data/val_200.fasta
+model_name: genslm_25M_patric
+model_cache_dir: /lus/eagle/projects/FoundEpidem/xlian/checkpoints/genslm_models/25M
+
+wandb_project: sdl-amp
+
+training_args:
+  output_dir: runs_prod/test_gpu
+  num_train_epochs: 1
+  per_device_train_batch_size: 2
+  per_device_eval_batch_size: 2
+  gradient_accumulation_steps: 2
+  eval_steps: 1145140000
+  logging_steps: 1145140000
+  load_best_model_at_end: false
+  logging_strategy: "steps"
+  save_steps: 1145140000
+  warmup_steps: 100
+  learning_rate: 0.00005
+  save_total_limit: 15
+  max_grad_norm: 1.0
+  fp16: False
+  bf16: True
