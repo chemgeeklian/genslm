@@ -5,7 +5,7 @@ from collections import defaultdict
 from concurrent.futures import ProcessPoolExecutor
 from contextlib import ExitStack
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import h5py
 import numpy as np
@@ -15,7 +15,7 @@ from torch.utils.data import Dataset
 from tqdm import tqdm
 from transformers import BatchEncoding, PreTrainedTokenizerFast
 
-from genslm.config import PathLike
+PathLike = Union[str, Path]
 
 
 # TODO: Remove dependecy for BioPython

@@ -7,6 +7,7 @@ import torch.nn as nn
 from tokenizers import Tokenizer
 from transformers import AutoConfig, AutoModelForCausalLM, PreTrainedTokenizerFast
 from transformers.utils import ModelOutput
+import pathlib
 
 import genslm
 
@@ -93,6 +94,7 @@ class GenSLM(nn.Module):
         if not weight_path.exists():
             # TODO: Implement model download
             raise NotImplementedError
+        torch.serialization.add_safe_globals([pathlib.PosixPath])
         ptl_checkpoint = torch.load(weight_path, map_location="cpu")
         model.load_state_dict(ptl_checkpoint["state_dict"], strict=False)
         return model
